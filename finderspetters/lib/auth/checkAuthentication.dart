@@ -1,5 +1,6 @@
 import 'package:finderspetters/auth/authPage.dart';
 import 'package:finderspetters/auth/loginScreen.dart';
+import 'package:finderspetters/screens/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class _CheckAuthenticationPageState extends State<CheckAuthenticationPage> {
             return Center(
                 child: Text('Something Went Wrong: ${snapshot.hasError}'));
           } else if (snapshot.hasData) {
-            return Container();
+            return UserPage();
           } else {
             return AuthPage();
           }

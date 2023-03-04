@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finderspetters/components/passwordInput.dart';
 import 'package:finderspetters/components/usernameInput.dart';
 import 'package:finderspetters/components/utils.dart';
+import 'package:finderspetters/screens/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -202,9 +203,11 @@ class _RegisterPageState extends State<RegisterScreenPage> {
         builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: username.text.trim(),
+        email: email.text.trim(),
         password: password.text.trim(),
       );
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => UserPage()));
     } on FirebaseAuthException catch (e) {
       if (e.message == "Given String is empty or null") {
         Utils.errorSnackBar(

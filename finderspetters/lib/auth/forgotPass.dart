@@ -29,59 +29,61 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
       backgroundColor: Color.fromRGBO(249, 235, 227, 1),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Center(
-                child: Container(
-                  height: 129,
-                  width: 320,
-                  child: Stack(
-                    children: [
-                      Text(
-                        "Getting",
-                        style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(186, 215, 98, 1)),
-                      ),
-                      Positioned(
-                        top: 60,
-                        child: Text(
-                          "Started",
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Center(
+                  child: Container(
+                    height: 129,
+                    width: 320,
+                    child: Stack(
+                      children: [
+                        Text(
+                          "Forgot",
                           style: TextStyle(
                               fontSize: 50,
                               fontWeight: FontWeight.bold,
                               color: Color.fromRGBO(186, 215, 98, 1)),
                         ),
-                      ),
-                    ],
+                        Positioned(
+                          top: 60,
+                          child: Text(
+                            "Password",
+                            style: TextStyle(
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromRGBO(186, 215, 98, 1)),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 50),
-            const Text(
-              'Receive an email to\nreset your password.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, color: Colors.black),
-            ),
-            SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Center(
-                child: UsernameInput(
-                  textEditingController: username,
-                  hintText: "Email Address",
+              SizedBox(height: 50),
+              const Text(
+                'Receive an email to\nreset your password.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24, color: Colors.black),
+              ),
+              SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Center(
+                  child: UsernameInput(
+                    textEditingController: username,
+                    hintText: "Email Address",
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 30),
-            RegisterButton(size),
-          ],
+              SizedBox(height: 30),
+              RegisterButton(size),
+            ],
+          ),
         ),
       ),
     );
@@ -89,7 +91,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   InkWell RegisterButton(Size size) {
     return InkWell(
-      onTap: (() {}),
+      onTap: (() {
+        sendPassword();
+      }),
       borderRadius: BorderRadius.circular(30),
       child: Container(
         width: size.width * 0.8,

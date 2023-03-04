@@ -61,7 +61,7 @@ class _UserPageState extends State<UserPage> {
                   onPressed: () {},
                 ),
                 GButton(
-                  icon: Icons.handshake,
+                  icon: Icons.person,
                   text: 'Account',
                   onPressed: () {},
                 ),
@@ -84,16 +84,28 @@ class _UserHomepageState extends State<UserHomepage> {
   int index = 0;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(186, 215, 98, 1),
           title: Padding(
               padding: const EdgeInsets.all(15), child: Text("FindersPetters")),
+          elevation: 0,
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [],
+          children: [
+            // Container(
+            //   width: size.width,
+            //   height: 150,
+            //   decoration: BoxDecoration(
+            //       color: Color.fromRGBO(186, 215, 98, 1),
+            //       borderRadius: BorderRadius.only(
+            //           bottomLeft: Radius.circular(30),
+            //           bottomRight: Radius.circular(30))),
+            // ),
+          ],
         ));
   }
 }
