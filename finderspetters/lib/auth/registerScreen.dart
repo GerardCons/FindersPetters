@@ -161,8 +161,6 @@ class _RegisterPageState extends State<RegisterScreenPage> {
               Icons.error, "Please complete all the requirements");
         } else {
           _uid = uuid.v4();
-          final uploadTime = DateTime.now();
-          Timestamp myTimeStamp = Timestamp.fromDate(uploadTime);
           final userData =
               FirebaseFirestore.instance.collection('User Profile').doc(_uid);
 

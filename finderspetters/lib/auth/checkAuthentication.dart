@@ -1,5 +1,4 @@
 import 'package:finderspetters/auth/authPage.dart';
-import 'package:finderspetters/auth/loginScreen.dart';
 import 'package:finderspetters/screens/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

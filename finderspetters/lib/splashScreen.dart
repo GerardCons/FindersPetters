@@ -30,16 +30,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image(
-                image: AssetImage("assets/image/splashImage.png"),
+                image: AssetImage("assets/image/fpLogo.png"),
                 width: 300,
               ),
-              SizedBox(height: 40),
-              Text("FindersPetters",
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              SizedBox(height: 30),
+              SizedBox(height: 50),
               SpinKitFadingCircle(
                 color: Colors.white,
                 size: 40,
