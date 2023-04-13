@@ -30,12 +30,12 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 60),
+              SizedBox(height: 100),
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Center(
                   child: Container(
-                    height: 220,
+                    height: 250,
                     width: 320,
                     child: Stack(
                       children: [
@@ -61,7 +61,7 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                           right: 0,
                           child: Image(
                             image: AssetImage("assets/image/loginPhoto.png"),
-                            height: 240,
+                            height: 270,
                             width: 250,
                           ),
                         ),
@@ -96,7 +96,9 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ForgotPasswordScreen()));
+                        builder: (context) => ForgotPasswordScreen(
+                              isLogin: "false",
+                            )));
                   },
                   child: const Text(
                     'Forgot Password?',
@@ -109,31 +111,6 @@ class _LoginScreenPageState extends State<LoginScreenPage> {
               ),
               const SizedBox(height: 10),
               loginButton(size),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: Divider(
-                      color: Colors.white,
-                      thickness: 3,
-                      indent: 40,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                    child: Text('or', style: TextStyle(color: Colors.black)),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Colors.white,
-                      thickness: 3,
-                      endIndent: 40,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              GoogleBtn1(onPressed: () {}),
               const SizedBox(height: 20),
               RichText(
                   text: TextSpan(

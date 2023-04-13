@@ -1,10 +1,12 @@
 import 'package:finderspetters/components/usernameInput.dart';
 import 'package:finderspetters/components/utils.dart';
+import 'package:finderspetters/screens/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  ForgotPasswordScreen({Key? key}) : super(key: key);
+  String isLogin;
+  ForgotPasswordScreen({Key? key, required this.isLogin}) : super(key: key);
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -134,7 +136,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Utils.errorSnackBar(Icons.error, e.message.toString());
       }
     }
-
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    if (widget.isLogin == "true") {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => UserPage()));
+    } else {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
   }
 }

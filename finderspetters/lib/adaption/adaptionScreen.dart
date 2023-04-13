@@ -1,31 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finderspetters/model/shop.dart';
-import 'package:finderspetters/screens/clinic/clinicStoreScreen.dart';
+import 'package:finderspetters/adaption/adaptionStoreScreen.dart';
+import 'package:finderspetters/model/adaption.dart';
 import 'package:finderspetters/screens/grooming/groomingStoreScreen.dart';
 import 'package:finderspetters/screens/homepage.dart';
-import 'package:finderspetters/screens/shop/shopStoreScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../model/grooming.dart';
 
-class ShopScreenWidget extends StatefulWidget {
-  const ShopScreenWidget({super.key});
+class AdaptionScreenWidget extends StatefulWidget {
+  const AdaptionScreenWidget({super.key});
 
   @override
-  State<ShopScreenWidget> createState() => _ShopScreenWidgetState();
+  State<AdaptionScreenWidget> createState() => _AdaptionScreenWidgetState();
 }
 
-class _ShopScreenWidgetState extends State<ShopScreenWidget> {
+class _AdaptionScreenWidgetState extends State<AdaptionScreenWidget> {
   String address = '';
   String query = '';
-  final List<Shop> _places = [];
-  List<Shop> _searchPlaces = [];
+  final List<Adaption> _places = [];
+  List<Adaption> _searchPlaces = [];
 
   void search(String value) {
     _searchPlaces.clear;
-    List<Shop> _searchPlacesQuery = [];
+    List<Adaption> _searchPlacesQuery = [];
 
     for (int i = 0; i < _places.length; i++) {
       if (_places[i].name.toLowerCase().contains(value.toLowerCase())) {
@@ -113,12 +112,12 @@ class _ShopScreenWidgetState extends State<ShopScreenWidget> {
   @override
   void initState() {
     FirebaseFirestore.instance
-        .collection('Shops Directory')
+        .collection('Adaption Directory')
         .get()
         .then((querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        final shopPlaces = Shop.fromJson(doc.data());
-        _places.add(shopPlaces);
+        final adaptionPlace = Adaption.fromJson(doc.data());
+        _places.add(adaptionPlace);
         setState(() {
           _searchPlaces = _places;
         });
@@ -145,7 +144,7 @@ class _ShopScreenWidgetState extends State<ShopScreenWidget> {
                 color: Colors.black,
               )),
           title: Text(
-            "Shops",
+            "Adaption Centers",
             style: TextStyle(color: Colors.black),
           ),
           elevation: 1,
@@ -192,11 +191,18 @@ class _ShopScreenWidgetState extends State<ShopScreenWidget> {
                     margin: EdgeInsets.symmetric(vertical: 8),
                     child: GestureDetector(
                       onTap: () {
-                        if ((_searchPlaces[index].isOpenNow == true)) {
+                        if (_searchPlaces[index].isOpenNow == true) {
                           Navigator.of(context)
                               .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => ShopStoreScreen(
-                                        storeId: _searchPlaces[index].id,
+                                  builder: (context) => PreviewAdaptionScreen(
+                                        storeAddress:
+                                            _searchPlaces[index].address,
+                                        storeImage: _searchPlaces[index].imgUrl,
+                                        storeName: _searchPlaces[index].name,
+                                        storeDescription:
+                                            _searchPlaces[index].description,
+                                        storeLat: _searchPlaces[index].lat,
+                                        storeLong: _searchPlaces[index].long,
                                       )));
                         }
                       },
@@ -204,7 +210,7 @@ class _ShopScreenWidgetState extends State<ShopScreenWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(20),
                             child: Container(
                               width: 160,
                               height: 130,
@@ -221,7 +227,7 @@ class _ShopScreenWidgetState extends State<ShopScreenWidget> {
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 20),
+                              SizedBox(height: 30),
                               Text(_searchPlaces[index].name,
                                   style: TextStyle(
                                       fontSize: 18.0,

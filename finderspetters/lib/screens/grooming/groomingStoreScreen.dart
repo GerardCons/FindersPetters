@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finderspetters/components/utils.dart';
 import 'package:finderspetters/model/grooming.dart';
-import 'package:finderspetters/screens/googleMapLocation.dart';
+import 'package:finderspetters/screens/grooming/googleMapLocation.dart';
 import 'package:finderspetters/screens/grooming/groomingReviewAppointment.dart';
 import 'package:finderspetters/screens/grooming/groomingScreen.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +30,7 @@ class _GroomingStoreScreenState extends State<GroomingStoreScreen> {
   String? storeName;
   String? storeId;
   String? storeAddress;
+  String weekday = "";
   List<String> selectedServices = [];
 
   void _handleTimeSelected(String time) {
@@ -100,7 +101,7 @@ class _GroomingStoreScreenState extends State<GroomingStoreScreen> {
   bool _checkIsOpenNow(Map<String, dynamic> schedule) {
     print("run check time function");
 
-    final weekday = DateFormat('EEE').format(DateTime.now());
+    weekday = DateFormat('EEE').format(DateTime.now());
     final currentTime = TimeOfDay.now();
     print(weekday.toUpperCase());
     if (schedule.containsKey(weekday.toUpperCase())) {
@@ -277,9 +278,9 @@ class _GroomingStoreScreenState extends State<GroomingStoreScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => GoogleMapLocation(
-                                        lat: double.parse(_places[0].lat),
-                                        long: double.parse(_places[0].long),
+                                      builder: (context) => RouteMapScreen(
+                                        lat: _places[0].lat,
+                                        long: _places[0].long,
                                       ),
                                     ),
                                   );
@@ -369,7 +370,11 @@ class _GroomingStoreScreenState extends State<GroomingStoreScreen> {
                                                 currentDate.year,
                                                 currentDate.month,
                                                 index + 1);
-                                            setState(() {});
+
+                                            setState(() {
+                                              weekday = DateFormat('EEE')
+                                                  .format(_selectedDay);
+                                            });
                                           },
                                           child: Container(
                                             height: 60,

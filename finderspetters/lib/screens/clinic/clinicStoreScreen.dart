@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finderspetters/components/utils.dart';
 import 'package:finderspetters/model/grooming.dart';
 import 'package:finderspetters/screens/clinic/clinicScreen.dart';
-import 'package:finderspetters/screens/googleMapLocation.dart';
+import 'package:finderspetters/screens/grooming/googleMapLocation.dart';
 import 'package:finderspetters/screens/grooming/groomingReviewAppointment.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -111,6 +111,7 @@ class _ClinicStoreScreenState extends State<ClinicStoreScreen> {
     if (schedule.containsKey(weekday.toUpperCase())) {
       times = List<String>.from(schedule[weekday.toUpperCase()]);
       print(times);
+      if (times.isNotEmpty) {}
       final startTime = TimeOfDay(
         hour: int.parse(times.first.split(':')[0]),
         minute: int.parse(times.first.split(':')[1]),
@@ -283,9 +284,9 @@ class _ClinicStoreScreenState extends State<ClinicStoreScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => GoogleMapLocation(
-                                        lat: double.parse(_places[0].lat),
-                                        long: double.parse(_places[0].long),
+                                      builder: (context) => RouteMapScreen(
+                                        lat: _places[0].lat,
+                                        long: _places[0].long,
                                       ),
                                     ),
                                   );

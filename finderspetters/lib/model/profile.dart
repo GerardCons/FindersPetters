@@ -6,18 +6,19 @@ class Profile {
   String username;
   String? imageUrl;
   String? address;
-  String? lat;
-  String? long;
+  double? lat;
+  double? long;
+
   Profile({
     required this.email,
     required this.fullName,
     required this.id,
     required this.mobileNumber,
     required this.username,
-    required this.imageUrl,
-    required this.address,
-    required this.lat,
-    required this.long,
+    this.imageUrl,
+    this.address,
+    this.lat,
+    this.long,
   });
 
   static Profile fromJson(Map<String, dynamic> json) => Profile(
@@ -26,9 +27,9 @@ class Profile {
         mobileNumber: json['mobileNumber'] ?? "",
         id: json['id'],
         username: json['username'],
-        imageUrl: json['imageUrl'],
-        address: json['address'],
-        lat: json['lat'],
-        long: json['long'],
+        imageUrl: json['imageUrl'] ?? "",
+        address: json['address'] ?? "",
+        lat: json['lat'] ?? 0.0,
+        long: json['long'] ?? 0.0,
       );
 }

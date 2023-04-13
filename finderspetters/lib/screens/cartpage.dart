@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finderspetters/model/cart.dart';
-import 'package:finderspetters/screens/veiwCart.dart';
+import 'package:finderspetters/screens/shop/veiwCart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

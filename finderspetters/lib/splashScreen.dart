@@ -15,7 +15,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 5)).then((value) => Navigator.of(context)
+    Future.delayed(Duration(seconds: 2)).then((value) => Navigator.of(context)
         .pushReplacement(
             CupertinoPageRoute(builder: (ctx) => CheckAuthenticationPage())));
   }

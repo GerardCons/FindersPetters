@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finderspetters/model/clinic.dart';
 import 'package:finderspetters/screens/clinic/clinicStoreScreen.dart';
 import 'package:finderspetters/screens/grooming/groomingStoreScreen.dart';
 import 'package:finderspetters/screens/homepage.dart';
@@ -17,7 +18,27 @@ class ClinicScreenWidget extends StatefulWidget {
 
 class _ClinicScreenWidgetState extends State<ClinicScreenWidget> {
   String address = '';
-  final List<Grooming> _places = [];
+  String query = '';
+  final List<Clinic> _places = [];
+  List<Clinic> _searchPlaces = [];
+
+  void search(String value) {
+    _searchPlaces.clear;
+    List<Clinic> _searchPlacesQuery = [];
+
+    for (int i = 0; i < _places.length; i++) {
+      if (_places[i].name.toLowerCase().contains(value.toLowerCase())) {
+        _searchPlacesQuery.add(_places[i]);
+      }
+    }
+    _searchPlaces = _searchPlacesQuery;
+    setState(() {
+      _calculateDistances();
+
+      print(_searchPlaces.length);
+    });
+  }
+
   Future<void> _calculateDistances() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -38,7 +59,7 @@ class _ClinicScreenWidgetState extends State<ClinicScreenWidget> {
 
     Position? _currentUserPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    for (final place in _places) {
+    for (final place in _searchPlaces) {
       double doubleAreaLat = double.parse(place.lat);
       double doubleAreaLong = double.parse(place.long);
       double distanceInMeter = Geolocator.distanceBetween(
@@ -95,8 +116,11 @@ class _ClinicScreenWidgetState extends State<ClinicScreenWidget> {
         .get()
         .then((querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        final clinicPlaces = Grooming.fromJson(doc.data());
+        final clinicPlaces = Clinic.fromJson(doc.data());
         _places.add(clinicPlaces);
+        setState(() {
+          _searchPlaces = _places;
+        });
       });
       _calculateDistances();
     });
@@ -124,91 +148,138 @@ class _ClinicScreenWidgetState extends State<ClinicScreenWidget> {
           ),
           elevation: 1,
         ),
-        body: ListView.builder(
-          itemCount: _places.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              margin: EdgeInsets.symmetric(vertical: 8),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => ClinicStoreScreen(
-                            storeId: _places[index].id,
-                          )));
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Container(
-                        width: 160,
-                        height: 130,
-                        margin: EdgeInsets.only(right: 16.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            image: DecorationImage(
-                                image: NetworkImage(_places[index].logoUrl),
-                                fit: BoxFit.fill)),
+        body: Column(
+          children: [
+            SizedBox(height: 10),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.0),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        query = value;
+                      });
+                    },
+                    onSubmitted: search,
+                    decoration: InputDecoration(
+                      labelText: 'Search',
+                      hintText: 'Enter your search query',
+                      border: InputBorder.none,
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () => search(query),
                       ),
                     ),
-                    Expanded(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 30),
-                        Text(_places[index].name,
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 4.0),
-                        (_places[index].isOpenNow == true)
-                            ? Row(
-                                children: [
-                                  Text("${_places[index].distance} km away"),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    "(Open)",
-                                    style: TextStyle(color: Colors.green),
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                children: [
-                                  Text("${_places[index].distance} km away"),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    "(Close)",
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ],
-                              ),
-                        SizedBox(height: 4.0),
-                        Text(_places[index].address),
-                        SizedBox(height: 4),
-                        RatingBar.builder(
-                          initialRating: _places[index].rating.toDouble(),
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          itemSize: 20.0,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          ignoreGestures: true,
-                          onRatingUpdate: (rating) {
-                            print(rating);
-                          },
-                        )
-                      ],
-                    ))
-                  ],
+                  ),
                 ),
               ),
-            );
-          },
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _searchPlaces.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (_searchPlaces[index].isOpenNow == true) {
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ClinicStoreScreen(
+                                        storeId: _searchPlaces[index].id,
+                                      )));
+                        }
+                      },
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Container(
+                              width: 160,
+                              height: 130,
+                              margin: EdgeInsets.only(right: 16.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          _searchPlaces[index].logoUrl),
+                                      fit: BoxFit.fill)),
+                            ),
+                          ),
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 30),
+                              Text(_searchPlaces[index].name,
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(height: 4.0),
+                              (_searchPlaces[index].isOpenNow == true)
+                                  ? Row(
+                                      children: [
+                                        Text(
+                                            "${_searchPlaces[index].distance} km away"),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          "(Open)",
+                                          style: TextStyle(color: Colors.green),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Text(
+                                            "${_searchPlaces[index].distance} km away"),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          "(Close)",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                              SizedBox(height: 4.0),
+                              Text(_searchPlaces[index].address),
+                              SizedBox(height: 4),
+                              RatingBar.builder(
+                                initialRating:
+                                    _searchPlaces[index].rating.toDouble(),
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemSize: 20.0,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 2.0),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                ignoreGestures: true,
+                                onRatingUpdate: (rating) {
+                                  print(rating);
+                                },
+                              )
+                            ],
+                          ))
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ));
   }
 }

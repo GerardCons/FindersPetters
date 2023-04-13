@@ -170,6 +170,8 @@ class _RegisterPageState extends State<RegisterScreenPage> {
             'fullName': fullName.text,
             'mobileNumber': mobileNumber.text,
             'username': username.text,
+            'imageUrl': "",
+            'address': ""
           };
           userData.set(data);
           signUp();
@@ -204,8 +206,6 @@ class _RegisterPageState extends State<RegisterScreenPage> {
         email: email.text.trim(),
         password: password.text.trim(),
       );
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => UserPage()));
     } on FirebaseAuthException catch (e) {
       if (e.message == "Given String is empty or null") {
         Utils.errorSnackBar(

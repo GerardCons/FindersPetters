@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finderspetters/adaption/adaptionScreen.dart';
 import 'package:finderspetters/screens/appointmentpage.dart';
 import 'package:finderspetters/screens/cartpage.dart';
 import 'package:finderspetters/screens/clinic/clinicScreen.dart';
 import 'package:finderspetters/screens/grooming/groomingScreen.dart';
-import 'package:finderspetters/screens/profilepage.dart';
+import 'package:finderspetters/profile/profilepage.dart';
 import 'package:finderspetters/screens/shop/shopscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -179,194 +181,223 @@ class _UserHomepageState extends State<UserHomepage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-        backgroundColor: Color.fromRGBO(249, 235, 227, 1),
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(186, 215, 98, 1),
-          title: Padding(
-              padding: const EdgeInsets.all(15), child: Text("FindersPetters")),
-          elevation: 0,
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: size.width,
-              height: 180,
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(186, 215, 98, 1),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        SizedBox(width: 5),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+    return (isloaded == true)
+        ? Scaffold(
+            backgroundColor: Color.fromRGBO(249, 235, 227, 1),
+            appBar: AppBar(
+              backgroundColor: Color.fromRGBO(186, 215, 98, 1),
+              title: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Text("FindersPetters")),
+              elevation: 0,
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: size.width,
+                  height: 180,
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(186, 215, 98, 1),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 25),
+                        child: Row(
                           children: [
-                            Text(
-                              'Location',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.start,
+                            Icon(
+                              Icons.location_on,
+                              color: Colors.white,
+                              size: 30,
                             ),
-                            Text(
-                              address,
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.start,
+                            SizedBox(width: 5),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Current Location',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
+                                Text(
+                                  address,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 50),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 50),
+                          child: Text(
+                            "Hello, ${fullName}!",
+                            style: TextStyle(fontSize: 22),
+                          )),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 50, top: 5),
+                          child: Text(
+                            "What are you looking for today?",
+                            style: TextStyle(fontSize: 18),
+                          )),
+                    ],
                   ),
-                  SizedBox(height: 50),
-                  Padding(
-                      padding: const EdgeInsets.only(left: 50),
-                      child: Text(
-                        "Hello, ${fullName}!",
-                        style: TextStyle(fontSize: 22),
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.only(left: 50, top: 5),
-                      child: Text(
-                        "What are you looking for today?",
-                        style: TextStyle(fontSize: 18),
-                      )),
-                ],
-              ),
-            ),
-            SizedBox(height: 50),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (isloaded == true) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ShopScreenWidget()));
-                            }
-                          },
-                          child: CircleAvatar(
-                            backgroundImage:
-                                AssetImage("assets/image/shop.png"),
-                            foregroundColor: Colors.black,
-                            radius: 50,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Shops',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (isloaded == true) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ClinicScreenWidget()));
-                            }
-                          },
-                          child: CircleAvatar(
-                            backgroundImage:
-                                AssetImage("assets/image/clinic.png"),
-                            foregroundColor: Colors.black,
-                            radius: 50,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Clinics',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
-                  ],
                 ),
                 SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (isloaded == true) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          GroomingScreenWidget()));
-                            }
-                          },
-                          child: CircleAvatar(
-                            backgroundImage:
-                                AssetImage("assets/image/grooming.png"),
-                            foregroundColor: Colors.black,
-                            radius: 50,
-                          ),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (isloaded == true) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ShopScreenWidget()));
+                                }
+                              },
+                              child: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/image/shop.png"),
+                                foregroundColor: Colors.black,
+                                radius: 50,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Shops',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Grooming',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (isloaded == true) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ClinicScreenWidget()));
+                                }
+                              },
+                              child: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/image/clinic.png"),
+                                foregroundColor: Colors.black,
+                                radius: 50,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Clinics',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
                       ],
                     ),
-                    Column(
+                    SizedBox(height: 50),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              AssetImage("assets/image/adaption.png"),
-                          radius: 50,
-                          foregroundColor: Colors.black,
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (isloaded == true) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              GroomingScreenWidget()));
+                                }
+                              },
+                              child: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/image/grooming.png"),
+                                foregroundColor: Colors.black,
+                                radius: 50,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Grooming',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Adoption',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AdaptionScreenWidget()));
+                              },
+                              child: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/image/adaption.png"),
+                                radius: 50,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Adoption',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
                       ],
                     )
                   ],
                 )
               ],
-            )
-          ],
-        ));
+            ))
+        : Scaffold(
+            backgroundColor: Color.fromRGBO(186, 215, 98, 1),
+            body: SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: AssetImage("assets/image/fpLogo.png"),
+                    width: 300,
+                  ),
+                  SizedBox(height: 50),
+                  SpinKitFadingCircle(
+                    color: Colors.white,
+                    size: 40,
+                  )
+                ],
+              ),
+            ));
   }
 }
